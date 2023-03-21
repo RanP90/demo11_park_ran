@@ -173,7 +173,7 @@ function displayCardsDynamically(collection) {
                 //so later we know which hike to bookmark based on which hike was clicked
                 newcard.querySelector('i').id = 'save-' + docID;
                 // this line will call a function to save the hikes to the user's document             
-                newcard.querySelector('i').onclick = () => saveBookmark(docID);
+                newcard.querySelector('i').onclick = () => toggleBookmark(docID);
                 //Ensure that the bookmark displays correctly as filled
                 //if it is already in the favourites
                 currentUser.get().then(userDoc => {
@@ -227,18 +227,28 @@ doAll();
 // It adds the hike to the "bookmarks" array
 // Then it will change the bookmark icon from the hollow to the solid version. 
 //-----------------------------------------------------------------------------
-function saveBookmark(hikeDocID) {
-    currentUser.set({
-            bookmarks: firebase.firestore.FieldValue.arrayUnion(hikeDocID)
-        }, {
-            merge: true
-        })
-        .then(function () {
-            console.log("bookmark has been saved for: " + currentUser);
-            var iconID = 'save-' + hikeDocID;
-            //console.log(iconID);
-						//this is to change the icon of the hike that was saved to "filled"
-            document.getElementById(iconID).innerText = 'bookmark';
-        });
+function toggleBookmark(hikeDocID) {
+    currentUser.get().then(userDoc => {
+        var bookmarks = userDoc.data().bookmarks;
+        var iconID = 'save-' + hikeDocID;
+        if (bookmarks.includes(hikeDocID)) {
+            currentUser.update({
+                bookmarks: firebase.firestore.FieldValue.arrayRemove(hikeDocID)
+            }).then(function () {
+                console.log("Bookmark removed for: " + currentUser);
+                document.getElementById(iconID).innerText = 'bookmark_border';
+            });
+        } else {
+            currentUser.set({
+                bookmarks: firebase.firestore.FieldValue.arrayUnion(hikeDocID)
+            }, {
+                merge: true
+            }).then(function () {
+                console.log("Bookmark added for: " + currentUser);
+                document.getElementById(iconID).innerText = 'bookmark';
+            });
+        }
+    });
 }
+
 
