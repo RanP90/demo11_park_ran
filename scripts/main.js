@@ -142,7 +142,7 @@ function displayCardsDynamically(collection) {
     let cardTemplate = document.getElementById("hikeCardTemplate");
 
     db.collection(collection)
-        .orderBy("hike_time") //NEW LINE; what do you want to sort by?
+        .orderBy("hike_time", "desc") //NEW LINE; what do you want to sort by?
         .limit(2) //NEW LINE: how many do you want to get?
         .get() //the collection called "hikes"
         .then(allHikes => {
