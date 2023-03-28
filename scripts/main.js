@@ -171,6 +171,7 @@ function displayCardsDynamically(collection) {
                 //NEW LINES: next 2 lines are new for demo#11
                 //this line sets the id attribute for the <i> tag in the format of "save-hikdID" 
                 //so later we know which hike to bookmark based on which hike was clicked
+                console.log("id"+id);
                 newcard.querySelector('i').id = 'save-' + docID;
                 // this line will call a function to save the hikes to the user's document             
                 newcard.querySelector('i').onclick = () => toggleBookmark(docID);
